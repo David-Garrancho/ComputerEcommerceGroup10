@@ -20,7 +20,9 @@ public class BundleFactory {
             return null;
         }
 
-        Helper.isValidDate(reviewDate);
+        if(!Helper.isValidDate2(reviewDate)){
+            return null;
+        }
 
         String bundleID = Helper.generateBundleID(bundleName, bundleType, bundleCategory);
         String productCategory = "System";
