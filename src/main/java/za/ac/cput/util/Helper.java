@@ -98,5 +98,16 @@ public class Helper {
         int randNum = random.nextInt(900000) + 100000;
         return productName.substring(0,3).toUpperCase() + randNum;
     }
+    
+    public static boolean isValidDate2(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(date.trim());
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
 
 }
