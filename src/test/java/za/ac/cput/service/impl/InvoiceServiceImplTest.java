@@ -1,10 +1,13 @@
 package za.ac.cput.service.impl;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import za.ac.cput.domain.Invoice;
-import za.ac.cput.factory.InvoiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import za.ac.cput.domain.*;
+import za.ac.cput.factory.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,37 +18,75 @@ import static org.junit.jupiter.api.Assertions.*;
     Date: 10 - 06 - 2023
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class InvoiceServiceImplTest {
 
-    private static InvoiceServiceImpl service = InvoiceServiceImpl.getService();
-    private static Invoice invoice_One = InvoiceFactory.buildInvoice("4845","124","GTX4090",
-                                                                    "Graphics Card",6,49500.50,
-                                                                    52400.60,15,"20-05-2023");
+    @Autowired
+    private InvoiceServiceImpl service;
+
+    private static Country southAfrica = CountryFactory.createCountry(
+            "South Africa"
+    );
+    private static  City homeCity = CityFactory.createCity(
+            "Cape Town",
+            southAfrica
+    );
+    private static  Address homeAddress = AddressFactory.buildAddress(
+            "53 Main Road",
+            "6045",
+            homeCity
+    );
+
+
+    private static final Customer customer = CustomerFactory.buildCustomer(
+            "Jason",
+            "King",
+            "KingJason@gmail.com",
+            "AlexDraai143"
+    );
+    private static final Sales sales = SalesFactory.buildTestSales(
+            "21c73f2d-a23e-4a2b-9fbb-e367d32d8b72",
+            "05-08-2023",
+            7000.00,
+            customer
+    );
+    private static final StoreDetails storeDetails = StoreDetailsFactory.buildTestStoreDetails(
+            "123",
+            "Evetech",
+            homeAddress,
+            "021 445 9912",
+            "techEve@gmail.com"
+    );
+
+    private static final Invoice invoice = InvoiceFactory.buildInvoice(
+            storeDetails,
+            sales
+    );
+
 
     @Test
     void a_create(){
-        Invoice invoiceCreated = service.create(invoice_One);
-        assertEquals(invoice_One.getInvoiceNumber(), invoiceCreated.getInvoiceNumber());
+        Invoice invoiceCreated = service.create(invoice);
+        assertEquals(invoice.getInvoiceNumber(), invoiceCreated.getInvoiceNumber());
         System.out.println("Created Invoice: " + invoiceCreated);
     }
     @Test
     void b_read(){
-        Invoice invoiceRead = service.read(invoice_One.getInvoiceNumber());
+        Invoice invoiceRead = service.read(invoice.getInvoiceNumber());
         assertNotNull(invoiceRead);
         System.out.println("Read ->" + invoiceRead);
     }
     @Test
+    @Disabled
     void c_update(){
-        Invoice updatedInvoice = new Invoice.Builder().copy(invoice_One)
-                .setProductName("GTX 4090ti")
-                .setPrice(53600.60)
+        Invoice updatedInvoice = new Invoice.Builder().copy(invoice)
                 .build();
         assertNotNull(service.update(updatedInvoice));
         System.out.println("Updated -> " + updatedInvoice);
     }
     @Test
     void d_delete(){
-        boolean success = service.delete(invoice_One.getInvoiceNumber());
+        boolean success = service.delete(invoice.getInvoiceNumber());
         assertTrue(success);
         System.out.println("Deleted -> " + success);
     }

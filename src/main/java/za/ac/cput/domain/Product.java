@@ -5,81 +5,61 @@ package za.ac.cput.domain;
  Date: 22 March 2023
 */
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-@Embeddable
 @Entity
 public class Product implements Serializable {
 
-    private String productType;
-    private String productCategory;
-    private String productDescription;
-    private int productQuantity;
-    private String productBrand;
-    private double productPrice;
-    private String productWarranty;
-
     @Id
     public String productID;
+
     public String productName;
-    public String reviewComment;
-    public String reviewDate;
-    public String reviewRating;
+    public String productType;
+    public String productDescription;
+    public double productPrice;
+
+     @OneToMany(cascade = CascadeType.ALL)
+    private List<SalesItem> salesItems = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<SupplierOrder> supplierOrders = new ArrayList<>();
 
     public Product(){
 
     }
-    public String getProductType() {
-        return productType;
-    }
 
-    public String getProductCategory() {
-        return productCategory;
-    }
-
-    public String getProductDescription() {
-        return productDescription;
-    }
-
-    public int getProductQuantity() {
-        return productQuantity;
-    }
-
-    public String getProductBrand() {
-        return productBrand;
-    }
-
-    public double getProductPrice() {
-        return productPrice;
-    }
-
-    public String getProductWarranty() {
-        return productWarranty;
+    private Product(Builder b) {
+        this.productID = b.productID;
+        this.productType = b.productType;
+        this.productDescription = b.productDescription;
+        this.productPrice = b.productPrice;
+        this.productName = b.productName;
     }
 
     public String getProductID() {
         return productID;
     }
 
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
+    }
+
+    public double getProductPrice() {
+        return productPrice;
+    }
+
     public String getProductName() {
         return productName;
-    }
-
-    public String getReviewComment() {
-        return reviewComment;
-    }
-
-    public String getReviewDate() {
-        return reviewDate;
-    }
-
-    public String getReviewRating() {
-        return reviewRating;
     }
 
     @Override
@@ -87,144 +67,67 @@ public class Product implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(productType, product.productType) && Objects.equals(productCategory, product.productCategory) && Objects.equals(productDescription, product.productDescription) && Objects.equals(productQuantity, product.productQuantity) && Objects.equals(productBrand, product.productBrand) && Objects.equals(productPrice, product.productPrice) && Objects.equals(productWarranty, product.productWarranty) && Objects.equals(productID, product.productID) && Objects.equals(productName, product.productName) && Objects.equals(reviewComment, product.reviewComment) && Objects.equals(reviewDate, product.reviewDate) && Objects.equals(reviewRating, product.reviewRating);
+        return Objects.equals(productID, product.productID) && Objects.equals(productPrice, product.productPrice) && Objects.equals(productName, product.productName) && Objects.equals(productType, product.productType) && Objects.equals(productDescription, product.productDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productType, productCategory, productDescription, productQuantity, productBrand, productPrice, productWarranty, productID, productName, reviewComment, reviewDate, reviewRating);
+        return Objects.hash(productID, productName, productType, productDescription, productPrice);
     }
 
     @Override
     public String toString() {
         return "Bundle{" +
-                "productType='" + productType + '\'' +
-                ", productCategory='" + productCategory + '\'' +
-                ", productDescription='" + productDescription + '\'' +
-                ", productQuantity='" + productQuantity + '\'' +
-                ", productBrand='" + productBrand + '\'' +
-                ", productPrice=" + productPrice +
-                ", productWarranty='" + productWarranty + '\'' +
                 ", productID='" + productID + '\'' +
-                ", productName='" + productName + '\'' +
-                ", reviewComment='" + reviewComment + '\'' +
-                ", reviewDate='" + reviewDate + '\'' +
-                ", reviewRating='" + reviewRating + '\'' +
-                '}';
+                ", productDescription='" + productDescription + '\'' +
+                ", productPrice=" + productPrice +
+                "productType='" + productType + '\'' +
+                ", productName='" + productName + '\''
+                + '}';
     }
 
-    private Product(Product.Builder p) {
-        this.productType = p.productType;
-        this.productCategory = p.productCategory;
-        this.productDescription = p.productDescription;
-        this.productQuantity = p.productQuantity;
-        this.productBrand = p.productBrand;
-        this.productPrice = p.productPrice;
-        this.productWarranty = p.productWarranty;
-        this.productID = p.productID;
-        this.productName = p.productName;
-        this.reviewComment = p.reviewComment;
-        this.reviewDate = p.reviewDate;
-        this.reviewRating = p.reviewRating;
-    }
+
     public static class Builder {
-        private String productType;
-        private String productCategory;
-        private String productDescription;
-        private int productQuantity;
-        private String productBrand;
-        private double productPrice;
-        private String productWarranty;
         public String productID;
+        private String productType;
+        private String productDescription;
+        private double productPrice;
         public String productName;
-        public String reviewComment;
-        public String reviewDate;
-        public String reviewRating;
 
-        public Product.Builder setProductType(String productType) {
+        public Builder setProductID(String productID) {
+            this.productID = productID;
+            return this;
+
+        }
+        public Builder setProductType(String productType) {
             this.productType = productType;
             return this;
         }
 
-        public Product.Builder setProductCategory(String productCategory) {
-            this.productCategory = productCategory;
-            return this;
-
-        }
-
-        public Product.Builder setProductDescription(String productDescription) {
+        public Builder setProductDescription(String productDescription) {
             this.productDescription = productDescription;
             return this;
 
         }
 
-        public Product.Builder setProductQuantity(int productQuantity) {
-            this.productQuantity = productQuantity;
-            return this;
-
-        }
-
-        public Product.Builder setProductBrand(String productBrand) {
-            this.productBrand = productBrand;
-            return this;
-
-        }
-
-        public Product.Builder setProductPrice(double productPrice) {
+        public Builder setProductPrice(double productPrice) {
             this.productPrice = productPrice;
             return this;
 
         }
 
-        public Product.Builder setProductWarranty(String productWarranty) {
-            this.productWarranty = productWarranty;
-            return this;
-
-        }
-
-        public Product.Builder setProductID(String productID) {
-            this.productID = productID;
-            return this;
-
-        }
-
-        public Product.Builder setProductName(String productName) {
+        public Builder setProductName(String productName) {
             this.productName = productName;
             return this;
 
         }
 
-        public Product.Builder setReviewComment(String reviewComment) {
-            this.reviewComment = reviewComment;
-            return this;
-
-        }
-
-        public Product.Builder setReviewDate(String reviewDate) {
-            this.reviewDate = reviewDate;
-            return this;
-
-        }
-
-        public Product.Builder setReviewRating(String reviewRating) {
-            this.reviewRating = reviewRating;
-            return this;
-
-        }
-
-        public Product.Builder copy(Product product) {
-            this.productType = product.productType;
-            this.productCategory = product.productCategory;
-            this.productDescription = product.productDescription;
-            this.productQuantity = product.productQuantity;
-            this.productBrand = product.productBrand;
-            this.productPrice = product.productPrice;
-            this.productWarranty = product.productWarranty;
+        public Builder copy(Product product) {
             this.productID = product.productID;
+            this.productType = product.productType;
+            this.productDescription = product.productDescription;
+            this.productPrice = product.productPrice;
             this.productName = product.productName;
-            this.reviewComment = product.reviewComment;
-            this.reviewDate = product.reviewDate;
-            this.reviewRating = product.reviewRating;
             return this;
         }
 

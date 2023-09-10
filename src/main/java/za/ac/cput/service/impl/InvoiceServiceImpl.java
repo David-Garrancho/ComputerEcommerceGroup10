@@ -1,8 +1,12 @@
 package za.ac.cput.service.impl;
 
-import za.ac.cput.repository.impl.InvoiceRepositoryImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import za.ac.cput.domain.Invoice;
+import za.ac.cput.repository.InvoiceRepository;
 import za.ac.cput.service.InvoiceService;
 
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -12,50 +16,39 @@ import java.util.Set;
     Date: 10 - 06 - 2023
  */
 
+@Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-    private static InvoiceServiceImpl service ;
-    private static InvoiceRepositoryImpl repository;
+    @Autowired
+    private InvoiceRepository repository; // Assuming you have an InvoiceRepository
 
-    public InvoiceServiceImpl (){
-        if (repository == null){
-            repository = InvoiceRepositoryImpl.getRepository();
-        }
-    }
 
-    public static InvoiceServiceImpl getService(){
-        if(service == null){
-            service = new InvoiceServiceImpl();
-        }
-        return service;
+    @Override
+    public Invoice create(Invoice invoice) {
+        return repository.save(invoice);
     }
 
     @Override
-    public za.ac.cput.domain.Invoice create(za.ac.cput.domain.Invoice invoice) {
-            za.ac.cput.domain.Invoice readInvoice = repository.create(invoice);
-            return readInvoice;
-        }
-
-    @Override
-    public za.ac.cput.domain.Invoice read(String id) {
-        za.ac.cput.domain.Invoice read = repository.read(id);
-        return read;
+    public Invoice read(String id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public za.ac.cput.domain.Invoice update(za.ac.cput.domain.Invoice invoice) {
-        za.ac.cput.domain.Invoice InvoiceUpdated = repository.update(invoice);
-        return invoice;
+    public Invoice update(Invoice invoice) {
+        return repository.save(invoice);
     }
 
     @Override
     public boolean delete(String id) {
-        Boolean success = repository.delete(id);
-        return success;
+        if (this.repository.existsById(id)){
+            this.repository.deleteById(id);
+            return  true;
+        }
+        return false;
     }
 
     @Override
-    public Set<za.ac.cput.domain.Invoice> getAll() {
-        return repository.getAll();
+    public List<Invoice> getAll() {
+        return repository.findAll();
     }
 }

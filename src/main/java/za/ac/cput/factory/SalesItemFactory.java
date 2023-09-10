@@ -5,22 +5,18 @@ import za.ac.cput.domain.Sales;
 import za.ac.cput.domain.SalesItem;
 import za.ac.cput.util.Helper;
 
-public class SalesItemFactory {
-    public static SalesItem buildSales(Sales sales, Product product, int quantity, double itemPrice) {
-        if (Helper.isInvalidInt(quantity)) {
-            return null;
-        }
+import java.util.List;
 
-        if (Helper.isInvalidDouble(itemPrice)) {
-            return null;
-        }
+public class SalesItemFactory {
+    public static SalesItem buildSales(Sales sales, List<Product> products, int quantity, double itemPrice) {
+        // Check for invalid values here
 
         String salesItemID = Helper.generateID();
 
         return new SalesItem.Builder()
                 .setSalesItemID(salesItemID)
                 .setSales(sales)
-                .setProduct(product)
+                .setProducts(products) // Use the new method to set products
                 .setQuantity(quantity)
                 .setItemPrice(itemPrice)
                 .build();

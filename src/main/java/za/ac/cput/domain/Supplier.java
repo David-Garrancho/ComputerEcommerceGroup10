@@ -6,16 +6,28 @@ package za.ac.cput.domain;
     Date: 6 April 2023
 */
 
+import jakarta.persistence.*;
+
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Supplier {
+@Entity
+public class Supplier implements Serializable {
 
+    @Id
     public String supplierID;
     private String supplierCompanyName;
     private String supplierTel;
     private String supplierEmail;
-    private String supplierAddress;
-    private String supplierProductLine;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "supplier_address",
+            joinColumns = @JoinColumn(name = "supplier_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id")
+    )
+    private Address address;
+
 
     public Supplier() {
 
@@ -37,24 +49,25 @@ public class Supplier {
         return supplierEmail;
     }
 
-    public String getSupplierAddress() {
-        return supplierAddress;
+    public Address getSupplierAddress() {
+        return address;
     }
 
-    public String getSupplierProductLine() {
-        return supplierProductLine;
-    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Supplier supplier = (Supplier) o;
-        return Objects.equals(supplierID, supplier.supplierID) && Objects.equals(supplierCompanyName, supplier.supplierCompanyName) && Objects.equals(supplierTel, supplier.supplierTel) && Objects.equals(supplierEmail, supplier.supplierEmail) && Objects.equals(supplierAddress, supplier.supplierAddress) && Objects.equals(supplierProductLine, supplier.supplierProductLine);
+        return Objects.equals(supplierID, supplier.supplierID) &&
+                Objects.equals(supplierCompanyName, supplier.supplierCompanyName) &&
+                Objects.equals(supplierTel, supplier.supplierTel) && Objects.equals(supplierEmail, supplier.supplierEmail)
+                && Objects.equals(address, supplier.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(supplierID, supplierCompanyName, supplierTel, supplierEmail, supplierAddress, supplierProductLine);
+        return Objects.hash(supplierID, supplierCompanyName, supplierTel, supplierEmail, address);
     }
 
     @Override
@@ -64,9 +77,7 @@ public class Supplier {
                 ", supplierCompanyName='" + supplierCompanyName + '\'' +
                 ", supplierTel='" + supplierTel + '\'' +
                 ", supplierEmail='" + supplierEmail + '\'' +
-                ", supplierAddress='" + supplierAddress + '\'' +
-                ", supplierProductLine='" + supplierProductLine + '\'' +
-                '}';
+                ", supplierAddress='" + address + '\'';
     }
 
 
@@ -76,8 +87,8 @@ public class Supplier {
         this.supplierCompanyName = b.supplierCompanyName;
         this.supplierTel = b.supplierTel;
         this.supplierEmail = b.supplierEmail;
-        this.supplierAddress = b.supplierAddress;
-        this.supplierProductLine = b.supplierProductLine;
+        this.address = b.address;
+
 
     }
 
@@ -89,8 +100,8 @@ public class Supplier {
         private String supplierCompanyName;
         private String supplierTel;
         private String supplierEmail;
-        private String supplierAddress;
-        private String supplierProductLine;
+        private Address address;
+
 
         public Builder setSupplierID(String supplierID) {
             this.supplierID = supplierID;
@@ -112,15 +123,12 @@ public class Supplier {
             return this;
         }
 
-        public Builder setSupplierAddress(String supplierAddress) {
-            this.supplierAddress = supplierAddress;
+        public Builder setSupplierAddress(Address address) {
+            this.address = address;
             return this;
         }
 
-        public Builder setSupplierProductLine(String supplierProductLine) {
-            this.supplierProductLine = supplierProductLine;
-            return this;
-        }
+
 
 
 
@@ -130,8 +138,7 @@ public class Supplier {
             this.supplierCompanyName = supplier.supplierCompanyName;
             this.supplierTel = supplier.supplierTel;
             this.supplierEmail = supplier.supplierEmail;
-            this.supplierAddress = supplier.supplierAddress;
-            this.supplierProductLine = supplier.supplierProductLine;
+            this.address = supplier.address;
             return this;
         }
 

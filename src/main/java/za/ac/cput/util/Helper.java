@@ -31,10 +31,10 @@ public class Helper {
     }
     public static String generateID(){return UUID.randomUUID().toString();}
 
-    public static String generateProductID(String pn, String pt, String pc){
+    public static String generateProductID(String pn, String pt){
         Random random = new Random();
         int randNum = random.nextInt(900000) + 100000;
-        String productID = pn.substring(0,3).toUpperCase() + pt.substring(0,3).toUpperCase() + pc.substring(0,3).toUpperCase() + randNum;
+        String productID = pn.substring(0,3).toUpperCase() + pt.substring(0,3).toUpperCase() + randNum;
         return productID;
     }
     public static String generateBundleID(String bn, String bt, String bc){
@@ -81,11 +81,13 @@ public class Helper {
     public static boolean isInvalidInt(int i) {
         return i < 0;
     }
-    public static boolean isValidPhoneNumber(String phoneNumber) {
+    /*public static boolean isValidPhoneNumber(String phoneNumber) {
         Pattern phoneNumberPattern = Pattern.compile("^\\d{10}$");
         Matcher findAMatch = phoneNumberPattern.matcher(phoneNumber);
         return (findAMatch.matches());
     }
+
+     */
     public static LocalDate isValidDate(String dateStr) {
         if (dateStr == null) {
             return null;
@@ -111,10 +113,10 @@ public class Helper {
         }
 
     }
-    public static String generateInvoiceNumber(String productName){
+    public static String generateInvoiceNumber(){
         Random random = new Random();
         int randNum = random.nextInt(900000) + 100000;
-        return productName.substring(0,3).toUpperCase() + randNum;
+        return String.valueOf(randNum);
     }
 
 }
